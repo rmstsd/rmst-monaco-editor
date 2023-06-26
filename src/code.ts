@@ -89,42 +89,121 @@ function drawOverlay() {
 }
 `
 
-/**
- * 
- * 
-      // 点击行号时
-      if (evt.target.type === monaco.editor.MouseTargetType.GUTTER_LINE_NUMBERS) {
-        return
+export const cssCode = `
+.break-dot {
+  background: #ff7575;
+  border-radius: 50%;
+  width: 10px !important;
+  height: 10px !important;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
 
-        const { position } = evt.target
-        const decorations = editor.createDecorationsCollection([
-          {
-            range: new monaco.Range(position.lineNumber, 1, position.lineNumber, 1),
-            options: {
-              // isWholeLine: true,
-              // className: 'myContentClass',
-              glyphMarginClassName: 'myGlyphMarginClass',
-              glyphMarginHoverMessage: { value: '断点' }
-            }
-          }
-        ])
-        console.log(decorations)
+.break-dot-active {
+  background: #ff2222;
+}
 
-        setTimeout(() => {
-          decorations.set([
-            {
-              range: new monaco.Range(position.lineNumber, 1, position.lineNumber, 1),
-              options: {
-                isWholeLine: true,
-                className: 'myContentClass',
-                glyphMarginClassName: 'myGlyphMarginClass-2',
-                glyphMarginHoverMessage: { value: '断点' }
-              }
-            }
-          ])
-          // decorations.clear()
-        }, 2000)
+.whole-line {
+  background: lightblue;
+}
+`
+
+export const scssCode = `
+$baseFontSizeInPixels: 14;
+
+@function px2em ($font_size, $base_font_size: $baseFontSizeInPixels) {  
+  @return ($font_size / $base_font_size) + em; 
+}
+
+h1 {
+  font-size: px2em(36, $baseFontSizeInPixels);
+}
+
+h2  {  
+  @each $animal in puma, sea-slug, egret, salamander {
+    .#{$animal}-icon {
+      background-image: url('/images/#{$animal}.png');
+    }
+  }
+}`
+
+export const tsCode = `
+import * as monaco from 'monaco-editor'
+
+type User = { name: string; age: number }
+type MouseLineCallback = (lineNumber: number) => void
+export function addLineNumberListener(
+  editor: monaco.editor.IStandaloneCodeEditor,
+  mouseEnter: MouseLineCallback,
+  mouseLeave: MouseLineCallback
+) {
+  let currLineNumber = null
+
+  editor.onMouseMove(evt => {
+    // console.log('mousemove - ', evt)
+
+    // 断点区域 || 行号区域
+    if (
+      evt.target.type === monaco.editor.MouseTargetType.GUTTER_GLYPH_MARGIN ||
+      evt.target.type === monaco.editor.MouseTargetType.GUTTER_LINE_NUMBERS
+    ) {
+      const { position } = evt.target
+
+      if (currLineNumber === null) {
+        currLineNumber = position.lineNumber
+
+        mouseEnter(position.lineNumber)
+      } else {
+        if (currLineNumber !== position.lineNumber) {
+          mouseLeave(currLineNumber)
+
+          mouseEnter(position.lineNumber)
+
+          currLineNumber = position.lineNumber
+        }
       }
+    } else {
+      if (currLineNumber === null) {
+        return
+      }
+      mouseLeave(currLineNumber)
+      currLineNumber = null
+    }
+  })
+}
+`
 
-      
- */
+export const tsxCode = `
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.tsx'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <>
+    <App />
+  </>
+)
+
+`
+
+export const pythonCode = `
+def main():
+    uu = "ui"
+
+    counts = [1, 2, 3, 4]
+    print("log", uu)
+
+    scc = calcSum(counts)
+    print("log", scc)
+
+
+def calcSum(arr):
+    if arr == 1:
+        pass
+
+    return sum(arr)
+
+
+main()`

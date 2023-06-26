@@ -2,12 +2,16 @@ import { useEffect, useRef, useState } from 'react'
 
 import * as monaco from 'monaco-editor'
 
+import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution'
+
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
 import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
 import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
-import { jsCode } from './code'
+
+import { cssCode, jsCode, scssCode, tsCode, tsxCode } from './code'
+
 import classNames from 'classnames'
 import { addLineNumberListener } from './utils'
 
