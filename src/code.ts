@@ -2,6 +2,10 @@ export const jsCode = `
 const rect_A = document.querySelector('.rect_A')
 const rect_B = document.querySelector('.rect_B')
 
+
+
+
+
 const overlapRect = document.querySelector('.overlap')
 
 let rect_A_pos

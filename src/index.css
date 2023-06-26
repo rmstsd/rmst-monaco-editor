@@ -1,25 +1,17 @@
-.myGlyphMarginClass {
+.break-dot {
   background: #ff7575;
   border-radius: 50%;
-
   width: 10px !important;
   height: 10px !important;
-
   top: 50%;
   transform: translateY(-50%);
-
   cursor: pointer;
 }
 
-.myGlyphMarginClass-active {
+.break-dot-active {
   background: #ff2222;
 }
 
-.myGlyphMarginClass-2 {
-  background: pink;
-}
-
-/* 整行高亮 */
-.myContentClass {
+.whole-line {
   background: lightblue;
 }

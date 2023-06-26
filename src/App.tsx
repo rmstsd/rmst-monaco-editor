@@ -8,6 +8,7 @@ import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
 import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 import { jsCode } from './code'
+import classNames from 'classnames'
 
 self.MonacoEnvironment = {
   getWorker(_, label) {
@@ -27,6 +28,10 @@ self.MonacoEnvironment = {
   }
 }
 
+const Normal_Class = 'break-dot'
+const Active_Class = 'break-dot-active'
+const Whole_Line_Class = 'whole-line'
+
 function App() {
   const [editor, setEditor] = useState<monaco.editor.IStandaloneCodeEditor>()
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>()
@@ -36,7 +41,7 @@ function App() {
     const model = editorRef.current.getModel()
     const des = model.getAllDecorations()
 
-    const breakDots = des.filter(item => item.options.glyphMarginClassName?.includes('myGlyphMarginClass'))
+    const breakDots = des.filter(item => item.options.glyphMarginClassName?.includes(Normal_Class))
 
     return breakDots
   }
@@ -53,7 +58,7 @@ function App() {
     })
 
     editor.onDidChangeCursorPosition(evt => {
-      console.log(evt)
+      updateBreakDotsEqual()
     })
 
     setEditor(editor)
@@ -100,14 +105,11 @@ function App() {
         const { position } = evt.target
 
         const dots = getAllBreakDots()
-
         const currLineDot = dots.find(item => item.range.startLineNumber === position.lineNumber)
 
-        const glyphMarginClassName = currLineDot.options.glyphMarginClassName.includes(
-          'myGlyphMarginClass-active'
-        )
-          ? 'myGlyphMarginClass'
-          : 'myGlyphMarginClass myGlyphMarginClass-active'
+        const glyphMarginClassName = currLineDot.options.glyphMarginClassName.includes(Active_Class)
+          ? Normal_Class
+          : classNames(Normal_Class, Active_Class)
 
         const newDecorations = [
           {
@@ -124,9 +126,7 @@ function App() {
     editor.onMouseLeave(() => {
       const allBreakDots = getAllBreakDots()
 
-      const unActives = allBreakDots.filter(
-        item => !item.options.glyphMarginClassName.includes('myGlyphMarginClass-active')
-      )
+      const unActives = allBreakDots.filter(item => !item.options.glyphMarginClassName.includes(Active_Class))
 
       editor.getModel().deltaDecorations(
         unActives.map(item => item.id),
@@ -146,26 +146,24 @@ function App() {
         return
       }
 
-      const config = {
+      const config: monaco.editor.IModelDeltaDecoration = {
         range: new monaco.Range(lineNumber, 1, lineNumber, 1),
-        options: { glyphMarginClassName: 'myGlyphMarginClass' }
+        options: { glyphMarginClassName: Normal_Class }
       }
 
-      editor.createDecorationsCollection([config])
+      editor.getModel().deltaDecorations([], [config])
     }
 
     function mouseLeaveLine(lineNumber: number) {
-      // console.log('移出了', currLineNumber)
+      console.log('移出了', currLineNumber)
 
       const allBreakDots = getAllBreakDots()
-
       const currLineDot = allBreakDots.find(item => item.range.startLineNumber === lineNumber)
-
       if (!currLineDot) {
         return
       }
 
-      if (currLineDot.options.glyphMarginClassName.includes('myGlyphMarginClass-active')) {
+      if (currLineDot.options.glyphMarginClassName.includes(Active_Class)) {
         return
       }
 
@@ -173,37 +171,90 @@ function App() {
     }
   }, [])
 
-  const ref = useRef<monaco.editor.IEditorDecorationsCollection>()
-  const setBreak = () => {
-    ref.current = editor.createDecorationsCollection([
-      {
-        range: new monaco.Range(5, 1, 5, 1),
-        options: { glyphMarginClassName: 'myGlyphMarginClass' }
-      }
-    ])
+  const setBreak = (lineNumber: number, glyphMarginClassName: string, isWholeLine = false) => {
+    editorRef.current.getModel().deltaDecorations(
+      [],
+      [
+        {
+          range: new monaco.Range(lineNumber, 1, lineNumber, 1),
+          options: { glyphMarginClassName, className: Whole_Line_Class, isWholeLine }
+        }
+      ]
+    )
   }
 
-  const getModel = () => {
+  const getBreakDots = () => {
     const model = editor.getModel()
-
     model.deltaDecorations
 
     const des = model.getAllDecorations()
 
-    const breakDots = des.filter(item => item.options.glyphMarginClassName?.includes('myGlyphMarginClass'))
+    const breakDots = des.filter(item => item.options.glyphMarginClassName?.includes(Normal_Class))
 
     console.log(breakDots)
   }
 
+  // 将 让断点的 startLineNumber 与 endLineNumber 都等于 startLineNumber, 并 以 startLineNumber 为准去重
+  function updateBreakDotsEqual() {
+    const model = editorRef.current.getModel()
+
+    const des = model.getAllDecorations()
+    des.forEach(item => {
+      if (item.range.startLineNumber !== item.range.endLineNumber) {
+        const { startLineNumber } = item.range
+
+        const newDecorations = [
+          {
+            range: new monaco.Range(startLineNumber, 1, startLineNumber, 1),
+            options: { glyphMarginClassName: item.options.glyphMarginClassName }
+          }
+        ]
+
+        // 更新断点 UI
+        model.deltaDecorations([item.id], newDecorations)
+      }
+    })
+
+    // 去重
+    const des2 = model.getAllDecorations()
+
+    for (let i = 0; i < des2.length; i++) {
+      const desItem = des2[i]
+      if (des2.slice(0, i).find(item => item.range.startLineNumber === desItem.range.startLineNumber)) {
+        model.deltaDecorations([desItem.id], [])
+      }
+    }
+  }
+
   return (
     <>
-      <button onClick={setBreak} onMouseDown={evt => evt.preventDefault()}>
-        set
-      </button>
+      <section style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
+        <button onClick={() => setBreak(5, Normal_Class)} onMouseDown={evt => evt.preventDefault()}>
+          set 5行 Normal_Class
+        </button>
 
-      <button onClick={getModel} onMouseDown={evt => evt.preventDefault()}>
-        model
-      </button>
+        <button
+          onClick={() => setBreak(7, classNames(Normal_Class, Active_Class))}
+          onMouseDown={evt => evt.preventDefault()}
+        >
+          set 7行 Active_Class
+        </button>
+
+        <button
+          onClick={() => setBreak(10, classNames(Normal_Class, Active_Class), true)}
+          onMouseDown={evt => evt.preventDefault()}
+        >
+          set 10行 Active_Class + 整行高亮
+        </button>
+
+        <button onClick={getBreakDots} onMouseDown={evt => evt.preventDefault()}>
+          model
+        </button>
+
+        <button onClick={updateBreakDotsEqual} onMouseDown={evt => evt.preventDefault()}>
+          updateBreakDotsEqual
+        </button>
+      </section>
 
       <div id="container" style={{ width: 1000, height: 800 }}></div>
     </>
