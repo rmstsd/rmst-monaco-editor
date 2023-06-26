@@ -9,6 +9,7 @@ import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 import { jsCode } from './code'
 import classNames from 'classnames'
+import { addLineNumberListener } from './utils'
 
 self.MonacoEnvironment = {
   getWorker(_, label) {
@@ -57,44 +58,12 @@ function App() {
       glyphMargin: true
     })
 
-    editor.onDidChangeCursorPosition(evt => {
-      updateBreakDotsEqual()
-    })
-
     setEditor(editor)
 
-    let currLineNumber = null
+    addLineNumberListener(editor, mouseEnterLine, mouseLeaveLine)
 
-    editor.onMouseMove(evt => {
-      // console.log('mousemove - ', evt)
-
-      // 断点区域 || 行号区域
-      if (
-        evt.target.type === monaco.editor.MouseTargetType.GUTTER_GLYPH_MARGIN ||
-        evt.target.type === monaco.editor.MouseTargetType.GUTTER_LINE_NUMBERS
-      ) {
-        const { position } = evt.target
-
-        if (currLineNumber === null) {
-          currLineNumber = position.lineNumber
-
-          mouseEnterLine(position.lineNumber)
-        } else {
-          if (currLineNumber !== position.lineNumber) {
-            mouseLeaveLine(currLineNumber)
-
-            mouseEnterLine(position.lineNumber)
-
-            currLineNumber = position.lineNumber
-          }
-        }
-      } else {
-        if (currLineNumber === null) {
-          return
-        }
-        mouseLeaveLine(currLineNumber)
-        currLineNumber = null
-      }
+    editor.onDidChangeCursorPosition(evt => {
+      updateBreakDotsEqual()
     })
 
     editor.onMouseDown(evt => {
@@ -139,7 +108,7 @@ function App() {
     })
 
     function mouseEnterLine(lineNumber: number) {
-      // console.log('移入了', lineNumber)
+      console.log('移入了', lineNumber)
 
       const allBreakDots = getAllBreakDots()
       if (allBreakDots.some(item => item.range.startLineNumber === lineNumber)) {
@@ -155,7 +124,7 @@ function App() {
     }
 
     function mouseLeaveLine(lineNumber: number) {
-      console.log('移出了', currLineNumber)
+      // console.log('移出了', lineNumber)
 
       const allBreakDots = getAllBreakDots()
       const currLineDot = allBreakDots.find(item => item.range.startLineNumber === lineNumber)
