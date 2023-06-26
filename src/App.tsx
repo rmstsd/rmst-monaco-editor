@@ -33,6 +33,13 @@ self.MonacoEnvironment = {
   }
 }
 
+const defaultCompilerOption = monaco.languages.typescript.javascriptDefaults.getCompilerOptions()
+monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+  ...defaultCompilerOption,
+  jsx: monaco.languages.typescript.JsxEmit.ReactJSX,
+  strict: false
+})
+
 const Normal_Class = 'break-dot'
 const Active_Class = 'break-dot-active'
 const Whole_Line_Class = 'whole-line'
@@ -55,8 +62,8 @@ function App() {
     console.log('MouseTargetType', monaco.editor.MouseTargetType)
 
     const editor = monaco.editor.create(document.getElementById('container'), {
-      value: jsCode,
-      language: 'javascript',
+      value: tsxCode,
+      language: 'typescript',
       fontSize: 18,
       theme: '',
       glyphMargin: true
