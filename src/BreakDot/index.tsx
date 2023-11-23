@@ -12,6 +12,8 @@ import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 
 import { cssCode, jsCode, scssCode, tsCode, tsxCode } from './code'
 
+import './index.css'
+
 import classNames from 'classnames'
 import { addLineNumberListener } from './utils'
 
@@ -44,7 +46,7 @@ const Normal_Class = 'break-dot'
 const Active_Class = 'break-dot-active'
 const Whole_Line_Class = 'whole-line'
 
-function App() {
+function BreakDot() {
   const [editor, setEditor] = useState<monaco.editor.IStandaloneCodeEditor>()
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>()
   editorRef.current = editor
@@ -241,4 +243,4 @@ function App() {
   )
 }
 
-export default App
+export default BreakDot
