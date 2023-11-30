@@ -12,6 +12,7 @@ import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
 import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 import escapeStringRegexp from 'escape-string-regexp'
+import axios from 'axios'
 
 self.MonacoEnvironment = {
   getWorker(_, label) {
@@ -81,6 +82,27 @@ const Suggest = () => {
       fontSize: 18,
       theme: '',
       glyphMargin: true
+    })
+
+    editor.addAction({
+      id: 'format-py',
+      label: '格式化',
+      keybindings: [],
+      precondition: null,
+      keybindingContext: null,
+      contextMenuGroupId: 'format',
+      contextMenuOrder: 1,
+
+      run: () => {
+        console.log(editor.getValue())
+
+        axios.post('http://localhost:3655/format', { data: editor.getValue() }).then(res => {
+          console.log(res.data)
+          editor.setValue(res.data.result)
+        })
+
+        return null
+      }
     })
   }, [])
 
