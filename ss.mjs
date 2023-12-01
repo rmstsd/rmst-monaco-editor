@@ -7,10 +7,8 @@ import { spawn } from 'cross-spawn'
 const app = new Koa()
 const router = new Router()
 
-// 解决跨域问题
 app.use(cors())
 
-// 解析请求体
 app.use(bodyParser())
 
 router.post('/format', async ctx => {
