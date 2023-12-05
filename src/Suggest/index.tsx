@@ -143,31 +143,31 @@ const createLanguageClient = (transports: MessageTransports): MonacoLanguageClie
 const Suggest = () => {
   async function init() {
     // init vscode-api
-    await initServices({
-      userServices: {
-        ...getThemeServiceOverride(),
-        ...getTextmateServiceOverride(),
-        ...getConfigurationServiceOverride(),
-        ...getKeybindingsServiceOverride()
-      },
-      debugLogging: true,
-      workspaceConfig: {
-        workspaceProvider: {
-          trusted: true,
-          workspace: {
-            workspaceUri: monaco.Uri.file('/workspace')
-          },
-          async open() {
-            return false
-          }
-        },
-        developmentOptions: {
-          logLevel: LogLevel.Debug
-        }
-      }
-    })
-    const p = await whenReady()
-    console.log(p)
+    // await initServices({
+    //   userServices: {
+    //     ...getThemeServiceOverride(),
+    //     ...getTextmateServiceOverride(),
+    //     ...getConfigurationServiceOverride(),
+    //     ...getKeybindingsServiceOverride()
+    //   },
+    //   debugLogging: true,
+    //   workspaceConfig: {
+    //     workspaceProvider: {
+    //       trusted: true,
+    //       workspace: {
+    //         workspaceUri: monaco.Uri.file('/workspace')
+    //       },
+    //       async open() {
+    //         return false
+    //       }
+    //     },
+    //     developmentOptions: {
+    //       logLevel: LogLevel.Debug
+    //     }
+    //   }
+    // })
+    // const p = await whenReady()
+    // console.log(p)
 
     const model = monaco.editor.createModel(pyCode, languageId, monaco.Uri.file('/workspace/hello.py'))
 
@@ -266,7 +266,7 @@ const Suggest = () => {
     init()
   }, [])
 
-  return <div className="container" style={{ width: 1000, height: 800 }}></div>
+  return <div className="container" style={{ width: 1000, height: 800, border: '1px solid #333' }}></div>
 }
 
 export default Suggest

@@ -208,6 +208,19 @@
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
 
+"@codingame/monaco-vscode-api@^1.83.14", "vscode@npm:@codingame/monaco-vscode-api", "vscode@npm:@codingame/monaco-vscode-api@1.83.14", "vscode@npm:@codingame/monaco-vscode-api@>=1.83.12 <1.84.0":
+  version "1.83.14"
+  resolved "https://registry.yarnpkg.com/@codingame/monaco-vscode-api/-/monaco-vscode-api-1.83.14.tgz#e114ad704f104aed0e5f724b1ec93c846ecbe1d0"
+  integrity sha512-y6v0iC5ytUsA2zCvNzkrf4mXkvSymvHFbttMb7P03zirJexov0wT5E2ZKjjyw38sHvVeuePEOuHArUCW2+T1Dg==
+  dependencies:
+    "@codingame/monaco-vscode-environment-service-override" "1.83.14"
+    "@codingame/monaco-vscode-extensions-service-override" "1.83.14"
+    "@codingame/monaco-vscode-files-service-override" "1.83.14"
+    "@codingame/monaco-vscode-layout-service-override" "1.83.14"
+    "@codingame/monaco-vscode-quickaccess-service-override" "1.83.14"
+    monaco-editor "0.44.0"
+    vscode-semver "npm:semver@=5.5.0"
+
 "@codingame/monaco-vscode-configuration-service-override@^1.83.14":
   version "1.83.14"
   resolved "https://registry.yarnpkg.com/@codingame/monaco-vscode-configuration-service-override/-/monaco-vscode-configuration-service-override-1.83.14.tgz#cefd05410245e131e93ac80ff3fd82fd2e105079"
@@ -1852,19 +1865,6 @@ vscode-ws-jsonrpc@^3.1.0:
   integrity sha512-Z3as2O9rml9rYMYjZQABeCtYEqmRa0TJRUOe6MElXDswNvXiJnu7+vqyy4c6GX+/8SfI0C+sDBJ7naM5wHz0gA==
   dependencies:
     vscode-jsonrpc "~8.2.0"
-
-"vscode@npm:@codingame/monaco-vscode-api", "vscode@npm:@codingame/monaco-vscode-api@1.83.14", "vscode@npm:@codingame/monaco-vscode-api@>=1.83.12 <1.84.0":
-  version "1.83.14"
-  resolved "https://registry.yarnpkg.com/@codingame/monaco-vscode-api/-/monaco-vscode-api-1.83.14.tgz#e114ad704f104aed0e5f724b1ec93c846ecbe1d0"
-  integrity sha512-y6v0iC5ytUsA2zCvNzkrf4mXkvSymvHFbttMb7P03zirJexov0wT5E2ZKjjyw38sHvVeuePEOuHArUCW2+T1Dg==
-  dependencies:
-    "@codingame/monaco-vscode-environment-service-override" "1.83.14"
-    "@codingame/monaco-vscode-extensions-service-override" "1.83.14"
-    "@codingame/monaco-vscode-files-service-override" "1.83.14"
-    "@codingame/monaco-vscode-layout-service-override" "1.83.14"
-    "@codingame/monaco-vscode-quickaccess-service-override" "1.83.14"
-    monaco-editor "0.44.0"
-    vscode-semver "npm:semver@=5.5.0"
 
 which@^2.0.1:
   version "2.0.2"
