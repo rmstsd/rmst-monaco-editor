@@ -217,11 +217,11 @@ const Suggest = () => {
         ]
       }
     }
-    registerExtension(extension, ExtensionHostKind.LocalProcess)
+    // registerExtension(extension, ExtensionHostKind.LocalProcess)
 
-    const url = createUrl('localhost', 30020, '/pyright', { authorization: 'UserAuth' }, false)
-    console.log(url)
-    createWebSocket(url)
+    // const url = createUrl('localhost', 30020, '/pyright', { authorization: 'UserAuth' }, false)
+    // console.log(url)
+    // createWebSocket(url)
 
     editor.addAction({
       id: 'format-py',

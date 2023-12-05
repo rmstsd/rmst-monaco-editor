@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "server": "node ./server/server.mjs",
     "server-format": "node ./server/format.mjs",
+    "server": "node ./server/server.mjs",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "postinstall": "monaco-treemending"

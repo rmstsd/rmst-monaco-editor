@@ -34,7 +34,7 @@ app.listen(3655, () => {
   console.log('Server is running on port 3655')
 })
 
-function executeCommandLine(command, args) {
+export function executeCommandLine(command, args) {
   return new Promise((resolve, reject) => {
     const process = spawn(command, args)
 
